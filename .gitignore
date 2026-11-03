@@ -1,0 +1,19 @@
+# Generated large binary data buffer (exceeds GitHub 100MB limit)
+scan_buffer.bin
+**/scan_buffer.bin
+
+# Compiled binaries
+initialize_data
+stride_benchmark
+**/initialize_data
+**/stride_benchmark
+
+# Files at root (organized inside "initial experiment/")
+/initialize_data.c
+/plot_results.py
+/stride_benchmark.c
+/stride_plot.png
+/stride_plot256.png
+/stride_plot_1024.png
+/stride_plot_from1to256.png
+/stride_results.csv
