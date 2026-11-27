@@ -3,6 +3,7 @@ scan_buffer.bin
 **/scan_buffer.bin
 
 # Compiled binaries
+*.exe
 initialize_data
 stride_benchmark
 **/initialize_data
