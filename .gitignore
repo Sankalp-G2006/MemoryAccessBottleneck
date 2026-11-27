@@ -18,3 +18,8 @@ stride_benchmark
 /stride_plot_1024.png
 /stride_plot_from1to256.png
 /stride_results.csv
+
+# Reference PDF and temporary extraction script
+extract_pdf.py
+EDRG12_BoMaKe (1).pdf
+EDRG12_BoMaKe(1).pdf
