@@ -27,8 +27,7 @@
 
 #define BUFFER_SIZE ((size_t)196 * 1024 * 1024)
 #define ITERATIONS 200000u
-#define REPEATS 10
-#define MAX_STRIDE 1024u
+#define REPEATS 200
 
 static volatile uint64_t checksum_sink = 0;
 
@@ -100,7 +99,17 @@ int main(int argc, char **argv) {
 
     fprintf(out, "stride_bytes,run,iterations,elapsed_seconds,checksum\n");
 
-    for (unsigned int stride = 1; stride <= MAX_STRIDE; stride *= 2) {
+    const unsigned int strides[] = {
+        1, 2, 4, 8, 16, 24, 32, 40,
+        48, 56, 60, 64, 68, 72, 80,
+        96, 112, 120, 128, 160, 192, 256
+    };
+
+    const size_t stride_count = sizeof(strides) / sizeof(strides[0]);
+
+    for (size_t s = 0; s < stride_count; ++s) {
+        unsigned int stride = strides[s];
+
         for (unsigned int run = 1; run <= REPEATS; ++run) {
             evict_cache_best_effort(evict, BUFFER_SIZE);
 
@@ -108,21 +117,22 @@ int main(int argc, char **argv) {
             size_t index = 0;
 
             double start = now_seconds();
+
             for (unsigned int i = 0; i < ITERATIONS; ++i) {
                 sum += data[index];
                 index += stride;
-                // As Index wraps around, it will eventually exceed BUFFER_SIZE, but we don't need to reset it because the buffer should be large enough to accommodate the maximum stride and number of iterations. The buffer size is 196 MiB, which is sufficient for the maximum stride of 1024 bytes and 200,000 iterations.
-                // if (index >= BUFFER_SIZE) {
-                //     index %= BUFFER_SIZE;
-                // }
             }
+
             double elapsed = now_seconds() - start;
 
             checksum_sink ^= sum;
+
             fprintf(out, "%u,%u,%u,%.9f,%" PRIu64 "\n",
                     stride, run, ITERATIONS, elapsed, sum);
+
             fflush(out);
         }
+
         printf("Finished stride %u bytes\n", stride);
     }
 
